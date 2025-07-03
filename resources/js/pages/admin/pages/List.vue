@@ -1,11 +1,10 @@
 <template>
-    <Head title="Permissions" />
-
+    <Head title="Pages" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <div class="flex items-center justify-between">
-                <Link :href="route('roles.create')">
-                    <Button label="Add Role" />
+                <Link :href="route('pages.create')">
+                    <Button label="Add Page" />
                 </Link>
                 <div class="w-64">
                     <form @submit.prevent="search()" class="flex gap-2">
@@ -25,14 +24,14 @@
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow v-for="(role, index) in roles" :key="index">
+                        <TableRow v-for="(page, index) in pages" :key="index">
                             <TableCell class="font-medium">
                                 {{ index + 1 }}
                             </TableCell>
-                            <TableCell>{{ role.name }}</TableCell>
+                            <TableCell>{{ page.name }}</TableCell>
 
                             <TableCell class="text-right">
-                                <Link :href="route('roles.edit', role.id)">
+                                <Link :href="route('pages.edit', page.id)">
                                     <Button class="mr-2" label="Edit" variant="secondary" />
                                 </Link>
 
@@ -43,6 +42,7 @@
                 </Table>
 
                 <Pagination
+                    v-if ="pages.length > 0"
                     v-model:page="pagination.currentPage"
                     :items-per-page="pagination.perPage"
                     :total="pagination.total"
@@ -50,24 +50,21 @@
                 />
             </div>
         </div>
-        <Toaster />
     </AppLayout>
 </template>
+
 <script>
 import Button from '@/components/custom/Button.vue';
+import Pagination from '@/components/custom/Pagination.vue';
 import { Input } from '@/components/ui/input';
-import { Toaster } from '@/components/ui/sonner';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
-import axios from 'axios';
 import { defineComponent } from 'vue';
-
-import Pagination from '@/components/custom/Pagination.vue';
-import 'vue-sonner/style.css';
 
 export default defineComponent({
     components: {
+        AppLayout,
         Table,
         TableBody,
         TableCaption,
@@ -75,18 +72,16 @@ export default defineComponent({
         TableHead,
         TableHeader,
         TableRow,
-        AppLayout,
+        Input,
+        Pagination,
         Head,
         Button,
         Link,
-        Toaster,
-        Input,
-        Pagination,
     },
-    data(vm) {
+    data() {
         return {
-            breadcrumbs: [{ title: 'Permissions', href: '/permissions' }],
-            roles: [],
+            breadcrumbs: [{ title: 'Pages', href: '/pages' }],
+            pages: [],
             form: this.$inertia.form({
                 search: '',
             }),
@@ -97,33 +92,24 @@ export default defineComponent({
             },
         };
     },
-    props: {
-        success: Boolean,
-        message: String,
-    },
     mounted() {
-        this.fetchRoles();
-        console.log('respose' + this.success);
+        this.fetchPages();
     },
     methods: {
-        async fetchRoles(page = 1, search = null) {
-            try {
-                const response = await axios.get(route('paginate.roles'), {
-                    params: {
-                        search: search,
-                        page: page,
-                    },
-                });
-                this.roles = response.data.data;
-                this.pagination.currentPage = response.data.current_page;
-                this.pagination.total = response.data.total;
-                this.pagination.perPage = response.data.per_page;
-            } catch (error) {
-                console.log(error);
-            }
+        async fetchPages(page = 1, search = null) {
+            const response = await axios.get(route('paginate.pages'), {
+                params: {
+                    search: search,
+                    page: page,
+                },
+            });
+            this.pages = response.data.data;
+            this.pagination.currentPage = response.data.current_page;
+            this.pagination.total = response.data.total;
+            this.pagination.perPage = response.data.per_page;
         },
         search() {
-            this.fetchRoles(1, this.form.search);
+            this.fetchPages(1, this.form.search);
         },
     },
 });

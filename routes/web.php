@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -15,10 +15,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::resource('permissions', PermissionController::class);
-    
-    Route::resource('roles', RoleController::class);
-    Route::get('pagination/roles', [RoleController::class, 'paginate'])->name('paginate.roles');
 
+    Route::get('pagination/roles', [RoleController::class, 'paginate'])->name('paginate.roles');
+    Route::resource('roles', RoleController::class);
+    
+    // Route::resource('pages', PageController::class);
+    // Route::get('pagination/pages', [PageController::class, 'paginate'])->name('paginate.roles');
 
 });
 

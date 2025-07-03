@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+use Inertia\Inertia;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Requests\{{MODEL}}\{{REQUEST}};
+use App\Models\{{MODEL}};
+use App\CrudTrait;
+
+class {{CONTROLLER}} extends Controller
+{
+    use CrudTrait;
+
+
+    protected $index_path, $store_rules, $route, $model, $edit_path, $table_name;
+
+    public function __construct({{MODEL}} $model){
+        $this->model = $model;
+        $this->route = 'model.index';
+        $this->index_path = 'admin/{{TABLE_NAME}}/List';
+        $this->edit_path = 'admin/{{TABLE_NAME}}/EditAdd';
+        $this->table_name = '{{TABLE_NAME}}';
+        $this->store_rules = {{REQUEST}}::class;
+    }
+
+    public function paginate(Request $request)
+    {
+        $query = $this->model->query();
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', '%' . $search . '%');
+        }
+        $data = $query->paginate(10);
+
+        return response()->json($data);
+    }
+
+    public function create()
+    {
+        if (!auth()->user()->can('add ' . $this->table_name)) {
+            abort(403, 'Unauthorized');
+        }
+        return Inertia::render($this->edit_path);
+    }
+
+   public function store({{REQUEST}} $request)
+    {
+        if (!auth()->user()->can('add ' . $this->table_name)) {
+            abort(403, 'Unauthorized');
+        }
+        try {
+            //
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function edit(string $id)
+    {
+        if (!auth()->user()->can('edit ' . $this->table_name)) {
+            abort(403, 'Unauthorized');
+        }
+        $data = $this->model->findOrFail($id);
+        return Inertia::render($this->edit_path, ['data' => $data]);
+    }
+
+    public function update({{REQUEST}} $request)
+    {
+        if (!auth()->user()->can('edit ' . $this->table_name)) {
+            abort(403, 'Unauthorized');
+        }
+        try {
+            //
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+    }
+
+}

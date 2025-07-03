@@ -18,19 +18,19 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         Permission::firstOrCreate(['name' => 'edit users', 'group' => 'users']);
-        Permission::firstOrCreate(['name' => 'delete users', 'group' => 'users']);
         Permission::firstOrCreate(['name' => 'add users', 'group' => 'users']);
         Permission::firstOrCreate(['name' => 'view users', 'group' => 'users']);
+        Permission::firstOrCreate(['name' => 'delete users', 'group' => 'users']);
 
         Permission::firstOrCreate(['name' => 'edit permissions', 'group' => 'permissions']);
-        Permission::firstOrCreate(['name' => 'delete permissions', 'group' => 'permissions']);
         Permission::firstOrCreate(['name' => 'add permissions', 'group' => 'permissions']);
         Permission::firstOrCreate(['name' => 'view permissions', 'group' => 'permissions']);
+        Permission::firstOrCreate(['name' => 'delete permissions', 'group' => 'permissions']);
 
         Permission::firstOrCreate(['name' => 'edit roles', 'group' => 'roles']);
-        Permission::firstOrCreate(['name' => 'delete roles', 'group' => 'roles']);
         Permission::firstOrCreate(['name' => 'add roles', 'group' => 'roles']);
         Permission::firstOrCreate(['name' => 'view roles', 'group' => 'roles']);
+        Permission::firstOrCreate(['name' => 'delete roles', 'group' => 'roles']);
 
         
         $admin = Role::create(['name' => 'admin']);
